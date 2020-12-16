@@ -1,11 +1,15 @@
 require "action_view"
 include ActionView::Helpers::NumberHelper
 
-class TopGrupp
+class TopGrup
+	
+	def initialization(name,data)
+		@@name =name
+		@@dataIiko = data
+	end
 
-	#Топ по группам блюд
-	def UseTopGrupp()
-		dataGruppM = $iiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud.json","CURRENT_MONTH")
+	def TopGrupF()
+		dataGruppM = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud.json","CURRENT_MONTH")
 		pointsGrM= []
 		laGrM = []
     	sum = 0
@@ -48,10 +52,10 @@ class TopGrupp
 
 		end
 		sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('TopGruppM', { items: laGrM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+        send_event('TopGruppM'+@@name, { items: laGrM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 		#Топ по группам блюд %%%%
 
-		dataGruppMPrecent = $iiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud%.json","CURRENT_MONTH")
+		dataGruppMPrecent = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud%.json","CURRENT_MONTH")
 		pointsGrMPr= []
 		laGrMPr = []
 
@@ -90,10 +94,10 @@ class TopGrupp
 			laGrMPr<<{label:(k+1).to_s+". "+i[:type],value:str}
 
 		end
-		send_event('TopGruppMPrecent', { items: laGrMPr ,moreinfo:Date.today.strftime("%B")})
+		send_event('TopGruppMPrecent'+@@name, { items: laGrMPr ,moreinfo:Date.today.strftime("%B")})
 		#Топ по группам блюд Count
         sum = 0
-		dataGruppMPCount = $iiko.IikoPostRequestForSebesMounth("PostPoGruppavBludCount.json","CURRENT_MONTH")
+		dataGruppMPCount = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBludCount.json","CURRENT_MONTH")
 		pointsGrMCount= []
 		laGrMCount = []
 		dataGruppMPCount['data'].each do |iikos|
@@ -134,10 +138,10 @@ class TopGrupp
 
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('TopGruppMCount', { items: laGrMCount ,moreinfo:Date.today.strftime("%B"),sum:sum})
+        send_event('TopGruppMCount'+@@name, { items: laGrMCount ,moreinfo:Date.today.strftime("%B"),sum:sum})
 		#Топ блюд
         sum=0
-		dataBludM = $iiko.IikoPostRequestForSebesMounth("PostBlud.json","CURRENT_MONTH")
+		dataBludM = @@dataIiko.IikoPostRequestForSebesMounth("PostBlud.json","CURRENT_MONTH")
 		pointsBludM= []
 		laBludM = []
 
@@ -182,12 +186,10 @@ class TopGrupp
 
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-		send_event('TopBludM', { items:laBludM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+		send_event('TopBludM'+@@name, { items:laBludM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
 	end
-end
+	
 
-top = TopGrupp.new
-SCHEDULER.every '15m', :first_in => 5 do |job|
-  top.UseTopGrupp()
+	
 end

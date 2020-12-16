@@ -1,11 +1,18 @@
-class Sebes
-	def UseSebes()
+class Sebest
+	
+	def initialization(name,data)
+		@@name =name
+		@@dataIiko = data
+	end
+
+
+	def SebesF()
 		# себе стоимость сегодня вчера
 		filterDeleted = {"DeletedWithWriteoff" => {"filterType"=> "IncludeValues",
                                            "values"=>["NOT_DELETED"]  } }
 
-		#dataSebes = $iiko.IikoPostRequestForSebesToday("PostForSebesToday.json")
-		dataSebes = $iiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.ProductCost"], str: "TODAY_YESTERDAY",filters: filterDeleted)
+		#dataSebes = $iikoM.IikoPostRequestForSebesToday("PostForSebesToday.json")
+		dataSebes = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.ProductCost"], str: "TODAY_YESTERDAY",filters: filterDeleted)
 		if dataSebes['data'].blank?
 			dataSebes['data']<<{'ProductCostBase.ProductCost'=> 0}
 			dataSebes['data']<<{'ProductCostBase.ProductCost'=> 0}
@@ -23,8 +30,8 @@ class Sebes
         
 		
 		# себе стоимость %%% сегодня вчера
-		#dataSebesPrecent = $iiko.IikoPostRequestForSebesToday("PostForSebes%.json")
-		dataSebesPrecent = $iiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.Percent"], str: "TODAY_YESTERDAY",filters: filterDeleted)
+		#dataSebesPrecent = $iikoM.IikoPostRequestForSebesToday("PostForSebes%.json")
+		dataSebesPrecent = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.Percent"], str: "TODAY_YESTERDAY",filters: filterDeleted)
 
 		if dataSebesPrecent['data'].blank?
 			dataSebesPrecent['data']<<{'ProductCostBase.Percent'=> 0}
@@ -42,8 +49,8 @@ class Sebes
         puts dataSebesPrecent
 		
 		# Кол-во заказов сегодня вчера
-		#dataZakaz = $iiko.IikoPostRequestForSebesToday("PostZakazovToday.json")
-		dataZakaz = $iiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["UniqOrderId.OrdersCount"], str: "TODAY_YESTERDAY")
+		#dataZakaz = $iikoM.IikoPostRequestForSebesToday("PostZakazovToday.json")
+		dataZakaz = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["UniqOrderId.OrdersCount"], str: "TODAY_YESTERDAY")
 
 		if dataZakaz['data'].blank?
 			dataZakaz['data']<<{'UniqOrderId.OrdersCount'=> 0}
@@ -62,21 +69,21 @@ class Sebes
 		
 
         # Себес + сумма + процент
-        #dataMulti = $iiko.IikoPostRequestToday("SumWithSebes.json")
-        dataMulti = $iiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.ProductCost","DishDiscountSumInt","ProductCostBase.Percent"], str: "TODAY",filters: filterDeleted)
+        #dataMulti = $iikoM.IikoPostRequestToday("SumWithSebes.json")
+        dataMulti = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.ProductCost","DishDiscountSumInt","ProductCostBase.Percent"], str: "TODAY",filters: filterDeleted)
         if dataMulti['data'].blank?
         	dataMulti['data']<<{'ProductCostBase.ProductCost'=> 0,'DishDiscountSumInt'=> 0,'ProductCostBase.Percent'=> 0}
         end
 
         
       
-        #dataMultiM= $iiko.IikoPostRequestForSebesMounth("SumWithSebesM.json","CURRENT_MONTH")
-        dataMultiM = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.ProductCost","DishDiscountSumInt","ProductCostBase.Percent"], str: "CURRENT_MONTH",filters: filterDeleted)
+        #dataMultiM= $iikoM.IikoPostRequestForSebesMounth("SumWithSebesM.json","CURRENT_MONTH")
+        dataMultiM = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.ProductCost","DishDiscountSumInt","ProductCostBase.Percent"], str: "CURRENT_MONTH",filters: filterDeleted)
 
 
         #Средн. сумма заказа
-        #dataSrCheck = $iiko.IikoPostRequestForSebesToday("SrCheck.json")
-        dataSrCheck = $iiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt.average"], str: "TODAY_YESTERDAY")
+        #dataSrCheck = $iikoM.IikoPostRequestForSebesToday("SrCheck.json")
+        dataSrCheck = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt.average"], str: "TODAY_YESTERDAY")
 
         if dataSrCheck['data'].blank?
 			dataSrCheck['data']<<{'DishDiscountSumInt.average'=> 0}
@@ -93,77 +100,69 @@ class Sebes
 		end
 		
 
-        #dataSrCheckM = $iiko.IikoPostRequestForSebesMounth("SrCheckM.json","CUSTOM")
-        dataSrCheckM = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["DishDiscountSumInt.average"], str: "CUSTOM")
+        #dataSrCheckM = $iikoM.IikoPostRequestForSebesMounth("SrCheckM.json","CUSTOM")
+        dataSrCheckM = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["DishDiscountSumInt.average"], str: "CUSTOM")
 
 		########################################################################
 
 		# себе стоимость месяц
 		#dataSebesMounth = $iiko.IikoPostRequestForSebesMounth("PostForSebesMounth.json","CUSTOM")
-        dataSebesMounth = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.ProductCost"], str: "CUSTOM",filters: filterDeleted)
+        dataSebesMounth = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.ProductCost"], str: "CUSTOM",filters: filterDeleted)
 
 
 		# себе стоимость месяц
 		#dataSebesMounthPrecent = $iiko.IikoPostRequestForSebesMounth("PostForSebesM%.json","CUSTOM")
-        dataSebesMounthPrecent = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.Percent"], str: "CUSTOM",filters: filterDeleted)
+        dataSebesMounthPrecent = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["ProductCostBase.Percent"], str: "CUSTOM",filters: filterDeleted)
 
 		# Кол-во заказов месяц
 		#dataZakazMounth = $iiko.IikoPostRequestForSebesMounth("PostZakazovMounth.json","CUSTOM")
-        dataZakazMounth = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["UniqOrderId.OrdersCount"], str: "CUSTOM")
+        dataZakazMounth = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth"],aggregateFields: ["UniqOrderId.OrdersCount"], str: "CUSTOM")
 
 		today = dataSebes['data'][1]['ProductCostBase.ProductCost']
 		yesterday = dataSebes['data'][0]['ProductCostBase.ProductCost']
-	  send_event('dataSebes', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataSebes'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
 	  today = dataZakaz['data'][1]['UniqOrderId.OrdersCount']
 	  yesterday = dataZakaz['data'][0]['UniqOrderId.OrdersCount']
-	  send_event('dataZakaz', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataZakaz'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
 	  today = (dataSebesPrecent['data'][1]['ProductCostBase.Percent']*100).round(2)
 	  yesterday = (dataSebesPrecent['data'][0]['ProductCostBase.Percent']*100).round(2)
-	  send_event('dataSebesPrecent', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataSebesPrecent'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
       today = (dataSrCheckM['data'][1]['DishDiscountSumInt.average']).round(2)
 	  yesterday = (dataSrCheckM['data'][0]['DishDiscountSumInt.average']).round(2)
-	  send_event('SrCheckM', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('SrCheckM'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
       today = (dataSrCheck['data'][1]['DishDiscountSumInt.average']).round(2)
 	  yesterday = (dataSrCheck['data'][0]['DishDiscountSumInt.average']).round(2)
-	  send_event('SrCheck', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('SrCheck'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
       high = (dataMultiM['data'][0]['ProductCostBase.ProductCost']).round(2)
 	  middle = (dataMultiM['data'][0]['ProductCostBase.Percent']*100).round(2)
 	  low = (dataMultiM['data'][0]['DishDiscountSumInt']).round(2)
 
-	  send_event('MultiM', { high: high, middle: middle.to_s+" %",low:low})
+	  send_event('MultiM'+@@name, { high: high, middle: middle.to_s+" %",low:low})
 
       high = (dataMulti['data'][0]['ProductCostBase.ProductCost']).round(2)
 	  middle = (dataMulti['data'][0]['ProductCostBase.Percent']*100).round(2)
 	  low = (dataMulti['data'][0]['DishDiscountSumInt']).round(2)
 
-	  send_event('Multi', { high: high, middle: middle.to_s+" %",low:low})
+	  send_event('Multi'+@@name, { high: high, middle: middle.to_s+" %",low:low})
 
 	  today = dataSebesMounth['data'][1]['ProductCostBase.ProductCost']
 	  yesterday = dataSebesMounth['data'][0]['ProductCostBase.ProductCost']
-	  send_event('dataSebesM', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataSebesM'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
 	  today = dataZakazMounth['data'][1]['UniqOrderId.OrdersCount']
 	  yesterday = dataZakazMounth['data'][0]['UniqOrderId.OrdersCount']
-	  send_event('dataZakazM', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataZakazM'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
 	  today = (dataSebesMounthPrecent['data'][1]['ProductCostBase.Percent']*100).round(2)
 	  yesterday = (dataSebesMounthPrecent['data'][0]['ProductCostBase.Percent']*100).round(2)
-	  send_event('dataSebesMounthPrecent', { current: today, last: yesterday,moreinfo:yesterday})
+	  send_event('dataSebesMounthPrecent'+@@name, { current: today, last: yesterday,moreinfo:yesterday})
 
 	end
 
-end
-
-sebes = Sebes.new
-
-SCHEDULER.every '15m', :first_in => 5 do |job|
-
-sebes.UseSebes()
-
-
+	
 end

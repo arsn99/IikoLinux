@@ -1,10 +1,17 @@
 require "action_view"
 include ActionView::Helpers::NumberHelper
+
 class Buzz
-	def UseBuzz()
+
+	def initialization(name,data)
+		@@name =name
+		@@dataIiko = data
+	end
+
+	def BuzzF()
 		#СПИСОК по типам оплат
-		dataBuzz = $iiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "TODAY")
-		#dataBuzz = $iiko.IikoPostRequestToday("POSTforBUZZ.json")
+		dataBuzz = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "TODAY")
+		#dataBuzz = $iikoM.IikoPostRequestToday("POSTforBUZZ.json")
 		points= []
 		la = []
     	sum = 0
@@ -21,13 +28,13 @@ class Buzz
 			la<<{label:(k+1).to_s+". "+i[:type],value:str}
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('buzzwords', { items: la ,moreinfo:Date.today,sum:sum})
+        send_event('buzzwords'+@@name, { items: la ,moreinfo:Date.today,sum:sum})
 
 		#СПИСОК по типам оплат за месяц
 
     	sum=0
-		dataBuzzMounth = $iiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "CURRENT_MONTH")
-		#dataBuzzMounth = $iiko.IikoPostRequestForSebesMounth("POSTforBUZZ.json","CURRENT_MONTH")
+		dataBuzzMounth = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "CURRENT_MONTH")
+		#dataBuzzMounth = $iikoM.IikoPostRequestForSebesMounth("POSTforBUZZ.json","CURRENT_MONTH")
 		pointsM= []
 		laM = []
 
@@ -43,7 +50,7 @@ class Buzz
 			laM<<{label:(k+1).to_s+". "+i[:type],value:str}
 		end
         #######
-	       send_event('max', { value: sum, max:2200000,moreinfo:"2 200 000",procent:number_with_delimiter(((sum/2200000)*100).round(2), delimiter: " ").to_s+"%"})
+	       send_event('max'+@@name, { value: sum, max:2200000,moreinfo:"2 200 000",procent:number_with_delimiter(((sum/2200000)*100).round(2), delimiter: " ").to_s+"%"})
 		   keka = []
 		   keka<<{'name'=>number_with_delimiter(sum.round, delimiter: " ").to_s + " / "+ number_with_delimiter(2200000, delimiter: " ").to_s,'progress'=>(sum/2200000)*100}
 		   keka<<{'name'=>"Тестовый1",'progress'=>29}
@@ -51,18 +58,18 @@ class Buzz
 		   keka<<{'name'=>"Тестовый3",'progress'=>60}
 		   keka<<{'name'=>"Тестовый4",'progress'=>77}
 		   keka<<{'name'=>"Тестовый5",'progress'=>90}
-		   send_event( 'progress_bars', {title: "Выручка", progress_items: keka} )
+		   send_event( 'progress_bars'+@@name, {title: "Выручка", progress_items: keka} )
 
-		  # send_event('telegram', { items: $iiko.TelegramMessage()})
+		  # send_event('telegram', { items: $iikoM.TelegramMessage()})
         #######
         sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('buzzwordsM', { items: laM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+        send_event('buzzwordsM'+@@name, { items: laM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
 
 		# Выручка касс
     	sum=0
-    	dataKas = $iiko.IikoPostRequestSTR(groupByColFields: ["CashRegisterName"],aggregateFields: ["DishDiscountSumInt"], str: "TODAY")
-		#dataKas = $iiko.IikoPostRequestToday("ViruchkaKassi.json")
+    	dataKas = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["CashRegisterName"],aggregateFields: ["DishDiscountSumInt"], str: "TODAY")
+		#dataKas = $iikoM.IikoPostRequestToday("ViruchkaKassi.json")
 		pointsKas= []
 		laKas = []
 
@@ -81,11 +88,11 @@ class Buzz
 			laKas<<{label:(k+1).to_s+". "+i[:cash].to_s,value:str}
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('buzzwordsKas', { items: laKas,moreinfo:Date.today,sum:sum})
+        send_event('buzzwordsKas'+@@name, { items: laKas,moreinfo:Date.today,sum:sum})
 		# Выручка касс МЕСЯЦ
         sum=0
-        dataKasM = $iiko.IikoPostRequestSTR(groupByColFields: ["CashRegisterName"],aggregateFields: ["DishDiscountSumInt"], str: "CURRENT_MONTH")
-		#dataKasM = $iiko.IikoPostRequestForSebesMounth("ViruchkaKassi.json","CURRENT_MONTH")
+        dataKasM = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["CashRegisterName"],aggregateFields: ["DishDiscountSumInt"], str: "CURRENT_MONTH")
+		#dataKasM = $iikoM.IikoPostRequestForSebesMounth("ViruchkaKassi.json","CURRENT_MONTH")
 		pointsKasM= []
 		laKasM = []
 
@@ -104,12 +111,12 @@ class Buzz
 			laKasM<<{label:(k+1).to_s+". "+i[:cash].to_s,value:str}
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-		send_event('buzzwordsKasM', { items: laKasM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+		send_event('buzzwordsKasM'+@@name, { items: laKasM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
         #По типам скидки МЕСЯЦ
         sum=0
-        dataTypeM = $iiko.IikoPostRequestSTR(groupByColFields: ["Mounth","OrderDiscount.Type"],aggregateFields: ["DiscountSum"], str: "CURRENT_MONTH")
-		#dataTypeM = $iiko.IikoPostRequestForSebesMounth("PostTypeDiscont.json","CURRENT_MONTH")
+        dataTypeM = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["Mounth","OrderDiscount.Type"],aggregateFields: ["DiscountSum"], str: "CURRENT_MONTH")
+		#dataTypeM = $iikoM.IikoPostRequestForSebesMounth("PostTypeDiscont.json","CURRENT_MONTH")
 		pointsTypeM= []
 		laKasTypeM = []
 
@@ -147,12 +154,12 @@ class Buzz
 			laKasTypeM<<{label:(k+1).to_s+". "+i[:type].to_s,value:str}
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-		send_event('buzzwordsTypeM', { items: laKasTypeM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+		send_event('buzzwordsTypeM'+@@name, { items: laKasTypeM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
         #По типам скидки СЕГОДНЯ
         sum=0
-        dataTypeToday = $iiko.IikoPostRequestSTR(groupByColFields: ["OrderDiscount.Type"],aggregateFields: ["DiscountSum"], str: "TODAY")
-		#dataTypeToday = $iiko.IikoPostRequestToday("PostTypeDiscontToday.json")
+        dataTypeToday = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OrderDiscount.Type"],aggregateFields: ["DiscountSum"], str: "TODAY")
+		#dataTypeToday = $iikoM.IikoPostRequestToday("PostTypeDiscontToday.json")
 		pointsTypeToday= []
 		laKasTypeToday = []
 
@@ -191,12 +198,7 @@ class Buzz
 			laKasTypeToday<<{label:(k+1).to_s+". "+i[:type].to_s,value:str}
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-		send_event('buzzwordsTypeToday', { items: laKasTypeToday ,moreinfo:Date.today.strftime("%B"),sum:sum})
+		send_event('buzzwordsTypeToday'+@@name, { items: laKasTypeToday ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
 	end
-end
-
-buzz = Buzz.new
-SCHEDULER.every '15m', :first_in => 5 do |job|
-  buzz.UseBuzz()
 end

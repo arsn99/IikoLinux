@@ -10,18 +10,19 @@ require 'json'
 
 	$delete = true
 	$iikoResponseToken = ""
-	def initialization(login = 'admin',password = 'Cnhtc101%')
+	$URL
+	def initialization(login = 'admin',password = 'Cnhtc101%',adress,httpbool)
 		@login=login
 		@password=Digest::SHA1.hexdigest password
-		@url = URI.parse("https://myusli.iiko.it:443/resto/api/")
+		$URL = adress
+		@url = URI.parse($URL+"resto/api/")	
+		@HTTPBOOL = httpbool
+
 
 		#puts "login = #{@login}\npassword = #{@password}"
 	end
 
 	def GetToken()
-
-		if $iikoResponseToken == ""
-			initialization()
 		  params = {
 			'login':@login,
 			'pass':@password
@@ -36,7 +37,7 @@ require 'json'
 			end
       puts $iikoResponseToken
 
-		end
+
 		#puts $iikoResponseToken
 	end
 
@@ -63,9 +64,9 @@ require 'json'
 		lines['filters']['OpenDate.Typed']['from'] = Date.today.prev_month.strftime("%Y-%m-%d")#ВРЕМЕННО убрать prev
 		lines['filters']['OpenDate.Typed']['to']   = Date.today.strftime("%Y-%m-%d")
 
-		url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+		url = URI($URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = true
+		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 		request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -110,9 +111,9 @@ require 'json'
 	    end
 
 
-	    url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+	    url = URI($URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = true
+			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
 			request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -128,9 +129,9 @@ require 'json'
 				lines = JSON.load(jsons)
 
 			end
-			url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+			url = URI($URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = true
+			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Post.new(url)
 
 			request["Content-Type"] = "application/json"
@@ -156,9 +157,9 @@ require 'json'
 		end
 		lines['filters']['OpenDate.Typed']['from'] = Date.today.strftime("%Y-%m-%d")#ВРЕМЕННО убрать prev
 		lines['filters']['OpenDate.Typed']['to']   = Date.today.strftime("%Y-%m-%d")	 #ВРЕМЕННО
-		url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+		url = URI($URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = true
+		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 		request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -180,9 +181,9 @@ require 'json'
 			#puts "keka",Date.today.strftime("%Y-%m-%d")
 			#puts lines
 
-			url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+			url = URI($URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = true
+			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
 			request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -204,7 +205,7 @@ require 'json'
 			url = @url + "v2/reports/olap/columns"
 			url.query = URI.encode_www_form( params )
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = true
+			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Get.new(url)
 			res = http.request(request)
 			puts res.code
@@ -229,9 +230,9 @@ require 'json'
 		end
 		#puts "keka",Date.today.strftime("%Y-%m-%d")
 
-		url = URI("https://myusli.iiko.it:443/resto/api/v2/reports/olap")
+		url = URI($URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = true
+		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 		request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -247,7 +248,7 @@ require 'json'
 		botName = "1074549219:AAED9jl8CEJxv_N1RJfJB57jDDU8aL41Fj4"
 		url = URI("https://api.telegram.org/bot#{botName}/getUpdates")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = true
+		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 
