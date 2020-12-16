@@ -1,8 +1,8 @@
 class Pie
 	
 	def initialization(name,data)
-		@@name =name
-		@@dataIiko = data
+		@name =name
+		@dataIiko = data
 	end
 
 	def PieF()
@@ -11,7 +11,7 @@ class Pie
 		dishDiscountSumIntPie = []
 
 		# Типы оплат
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "CURRENT_MONTH")
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["PayTypes"],aggregateFields: ["UniqOrderId","DishDiscountSumInt"], str: "CURRENT_MONTH")
 		#data = $iikoM.IikoPostRequestForSebesMounth("POSTforBUZZ.json","CURRENT_MONTH")
 
 		data['data'].each do |iikos|
@@ -64,6 +64,6 @@ class Pie
 			  ],
 			},
 		  ]
-		  send_event('piechart'+@@name, { labels: labelsPie, datasets: data ,moreinfo:dataMoreInfoSum})
+		  send_event('piechart'+@name, { labels: labelsPie, datasets: data ,moreinfo:dataMoreInfoSum})
 	end
 end

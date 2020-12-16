@@ -4,12 +4,12 @@ include ActionView::Helpers::NumberHelper
 class TopGrup
 	
 	def initialization(name,data)
-		@@name =name
-		@@dataIiko = data
+		@name =name
+		@dataIiko = data
 	end
 
 	def TopGrupF()
-		dataGruppM = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud.json","CURRENT_MONTH")
+		dataGruppM = @dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud.json","CURRENT_MONTH")
 		pointsGrM= []
 		laGrM = []
     	sum = 0
@@ -52,10 +52,10 @@ class TopGrup
 
 		end
 		sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('TopGruppM'+@@name, { items: laGrM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+        send_event('TopGruppM'+@name, { items: laGrM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 		#Топ по группам блюд %%%%
 
-		dataGruppMPrecent = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud%.json","CURRENT_MONTH")
+		dataGruppMPrecent = @dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBlud%.json","CURRENT_MONTH")
 		pointsGrMPr= []
 		laGrMPr = []
 
@@ -94,10 +94,10 @@ class TopGrup
 			laGrMPr<<{label:(k+1).to_s+". "+i[:type],value:str}
 
 		end
-		send_event('TopGruppMPrecent'+@@name, { items: laGrMPr ,moreinfo:Date.today.strftime("%B")})
+		send_event('TopGruppMPrecent'+@name, { items: laGrMPr ,moreinfo:Date.today.strftime("%B")})
 		#Топ по группам блюд Count
         sum = 0
-		dataGruppMPCount = @@dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBludCount.json","CURRENT_MONTH")
+		dataGruppMPCount = @dataIiko.IikoPostRequestForSebesMounth("PostPoGruppavBludCount.json","CURRENT_MONTH")
 		pointsGrMCount= []
 		laGrMCount = []
 		dataGruppMPCount['data'].each do |iikos|
@@ -138,10 +138,10 @@ class TopGrup
 
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-        send_event('TopGruppMCount'+@@name, { items: laGrMCount ,moreinfo:Date.today.strftime("%B"),sum:sum})
+        send_event('TopGruppMCount'+@name, { items: laGrMCount ,moreinfo:Date.today.strftime("%B"),sum:sum})
 		#Топ блюд
         sum=0
-		dataBludM = @@dataIiko.IikoPostRequestForSebesMounth("PostBlud.json","CURRENT_MONTH")
+		dataBludM = @dataIiko.IikoPostRequestForSebesMounth("PostBlud.json","CURRENT_MONTH")
 		pointsBludM= []
 		laBludM = []
 
@@ -186,7 +186,7 @@ class TopGrup
 
 		end
         sum = number_with_delimiter(sum.round, delimiter: " ")
-		send_event('TopBludM'+@@name, { items:laBludM ,moreinfo:Date.today.strftime("%B"),sum:sum})
+		send_event('TopBludM'+@name, { items:laBludM ,moreinfo:Date.today.strftime("%B"),sum:sum})
 
 	end
 	

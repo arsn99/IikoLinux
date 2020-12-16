@@ -16,7 +16,7 @@ require 'json'
 		@password=Digest::SHA1.hexdigest password
 		$URL = adress
 		@url = URI.parse($URL+"resto/api/")	
-		@HTTPBOOL = httpbool
+		@httpbool = httpbool
 
 
 		#puts "login = #{@login}\npassword = #{@password}"
@@ -113,7 +113,7 @@ require 'json'
 
 	    url = URI($URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = @HTTPBOOL
+			http.use_ssl = @httpbool
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
 			request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -159,7 +159,7 @@ require 'json'
 		lines['filters']['OpenDate.Typed']['to']   = Date.today.strftime("%Y-%m-%d")	 #ВРЕМЕННО
 		url = URI($URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = @HTTPBOOL
+		http.use_ssl = @httpbool
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 		request["Cookie"] = "key=#{$iikoResponseToken}"
@@ -205,7 +205,7 @@ require 'json'
 			url = @url + "v2/reports/olap/columns"
 			url.query = URI.encode_www_form( params )
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = @HTTPBOOL
+			http.use_ssl = @httpbool
 			request = Net::HTTP::Get.new(url)
 			res = http.request(request)
 			puts res.code
@@ -248,7 +248,7 @@ require 'json'
 		botName = "1074549219:AAED9jl8CEJxv_N1RJfJB57jDDU8aL41Fj4"
 		url = URI("https://api.telegram.org/bot#{botName}/getUpdates")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = @HTTPBOOL
+		http.use_ssl = @httpbool
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 

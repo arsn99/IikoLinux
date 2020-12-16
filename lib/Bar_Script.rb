@@ -4,8 +4,8 @@ include ActionView::Helpers::NumberHelper
 class Bar
 	
 	def initialization(name,data)
-		@@name =name
-		@@dataIiko = data
+		@name =name
+		@dataIiko = data
 	end
 
 	def BarF()
@@ -15,7 +15,7 @@ class Bar
         filterDeleted = {"DeletedWithWriteoff" => {"filterType"=> "IncludeValues",
                                            "values"=>["NOT_DELETED"]  } }
 
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.Percent"], str: "CURRENT_MONTH",filters: filterDeleted)
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["ProductCostBase.Percent"], str: "CURRENT_MONTH",filters: filterDeleted)
         #data = $iikoM.IikoPostRequestForSebesMounth("PostForSebes%.json","CURRENT_MONTH")
         prev = ""
         sum = 0
@@ -68,11 +68,11 @@ class Bar
 
             }
         ]
-        send_event('barchartSebes'+@@name, { labels: labelsBarSebesSum, datasets: data })
+        send_event('barchartSebes'+@name, { labels: labelsBarSebesSum, datasets: data })
          #График НАКОПЛЕНИЕ ВЫРУЧКИ
 
         #ПЕРВАЯ ЧАСТЬ
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "LAST_MONTH")
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "LAST_MONTH")
         #data = $iikoM.IikoPostRequestForSebesMounth("POST.json","LAST_MONTH")
         prev = ""
         sumLast=0
@@ -100,7 +100,7 @@ class Bar
                 pointsSum << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: sumLast }
                 prev = Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d")
               end
-              #@@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
+              #@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
         end
 
         pointsSum.each do |i|
@@ -111,7 +111,7 @@ class Bar
             labelsBarSum<<i[:x]
         end
         #ВТОРАЯ ЧАСТЬ
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "CURRENT_MONTH")
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "CURRENT_MONTH")
         #data = $iikoM.IikoPostRequestForSebesMounth("POST.json","CURRENT_MONTH")
         prev = ""
 
@@ -138,7 +138,7 @@ class Bar
                 pointsSum2 << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: sumCurrent }
                 prev = Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d")
               end
-              #@@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
+              #@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
         end
 
         pointsSum2.each do |i|
@@ -167,11 +167,11 @@ class Bar
 
             }
         ]
-        send_event('barchartSum'+@@name, { labels: labelsBarSum2, datasets: data })
+        send_event('barchartSum'+@name, { labels: labelsBarSum2, datasets: data })
 
         #График выручки по дням за месяц
 
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "CUSTOM_MONTH")
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt"], str: "CUSTOM_MONTH")
         
         #data = $iikoM.IikoPostRequest("POST.json")
         prev = ""
@@ -194,7 +194,7 @@ class Bar
                 points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
                 prev = Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d")
               end
-              #@@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
+              #@points << { x: Date::strptime(iikos['OpenDate.Typed'].to_s, "%Y-%m-%d").strftime('%d-%m') , y: iikos['DishDiscountSumInt'] }
         end
 
         points.each do |i|
@@ -215,12 +215,12 @@ class Bar
 
             }
         ]
-        send_event('barchart'+@@name, { labels: labelsBar, datasets: data })
+        send_event('barchart'+@name, { labels: labelsBar, datasets: data })
 
         #График среднего чека по дням
 
 
-        data = @@dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt.average"], str: "CUSTOM_MONTH")
+        data = @dataIiko.IikoPostRequestSTR(groupByColFields: ["OpenDate.Typed"],aggregateFields: ["DishDiscountSumInt.average"], str: "CUSTOM_MONTH")
         #data = $iikoM.IikoPostRequest("SrCheck.json")
         prev = ""
 
@@ -264,7 +264,7 @@ class Bar
 
             }
         ]
-        send_event('barchartSr'+@@name, { labels: labelsBarSr, datasets: data })
+        send_event('barchartSr'+@name, { labels: labelsBarSr, datasets: data })
     end
 	
 end
