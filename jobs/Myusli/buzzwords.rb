@@ -1,7 +1,7 @@
 load 'lib/Buzzwords_Script.rb'
 buzzMyusli = Buzz.new
 buzzFarm = Buzz.new
-SCHEDULER.in '20' do
+SCHEDULER.in '20s' do
 	buzzMyusli.initialization('Myusli',$iikoM)
 	buzzFarm.initialization('Farm',$iikoF)
 end

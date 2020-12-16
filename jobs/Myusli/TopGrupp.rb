@@ -1,7 +1,7 @@
 load 'lib/TopGrupp_Script.rb'
 topMyusli = TopGrup.new
 topFarm = TopGrup.new
-SCHEDULER.in '20' do
+SCHEDULER.in '20s' do
 	topMyusli.initialization('Myusli',$iikoM)
 	topFarm.initialization('Farm',$iikoF)
 end

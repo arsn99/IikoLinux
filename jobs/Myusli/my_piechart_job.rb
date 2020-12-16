@@ -2,7 +2,7 @@ load 'lib/Pie_Script.rb'
 
 pieMyusli = Pie.new
 pieFarm = Pie.new
-SCHEDULER.in '20' do
+SCHEDULER.in '20s' do
 	pieMyusli.initialization('Myusli',$iikoM)
 	pieFarm.initialization('Farm',$iikoF)
 end

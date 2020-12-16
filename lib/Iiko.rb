@@ -9,13 +9,13 @@ require 'json'
  class IikoRequests
 
 	$delete = true
-	$iikoResponseToken = ""
-	$URL
+	@iikoResponseToken = ""
+	@URL
 	def initialization(login = 'admin',password = 'Cnhtc101%',adress,httpbool)
 		@login=login
 		@password=Digest::SHA1.hexdigest password
-		$URL = adress
-		@url = URI.parse($URL+"resto/api/")	
+		@URL = adress
+		@url = URI.parse(@URL+"resto/api/")	
 		@httpbool = httpbool
 
 
@@ -30,28 +30,28 @@ require 'json'
 			url = @url+"auth"
 			url.query = URI.encode_www_form( params )
 
-			$iikoResponseToken = Net::HTTP.get(url).to_s
+			@iikoResponseToken = Net::HTTP.get(url).to_s
 
 			File.open("log.txt","a") do |log|
-				log.print("Токен получен : #{$iikoResponseToken}\t\t#{Time.now}\n")
+				log.print("Токен получен : #{@iikoResponseToken}\t\t#{Time.now} #{@URL}\n")
 			end
-      puts $iikoResponseToken
+      puts @iikoResponseToken
 
 
-		#puts $iikoResponseToken
+		#puts @iikoResponseToken
 	end
 
 	def Finalize()
 		puts "FINAL"
 			params = {
-				'key':$iikoResponseToken
+				'key':@iikoResponseToken
 			}
 			url = @url + "logout"
 			url.query = URI.encode_www_form( params )
 			Net::HTTP.get(url)
 
 			File.open("log.txt","a") do |log|
-				log.print("Токен удален : #{$iikoResponseToken}\t\t#{Time.now}\n")
+				log.print("Токен удален : #{@iikoResponseToken}\t\t#{Time.now}\n")
 			end
 	end
 
@@ -64,12 +64,12 @@ require 'json'
 		lines['filters']['OpenDate.Typed']['from'] = Date.today.prev_month.strftime("%Y-%m-%d")#ВРЕМЕННО убрать prev
 		lines['filters']['OpenDate.Typed']['to']   = Date.today.strftime("%Y-%m-%d")
 
-		url = URI($URL+"resto/api/v2/reports/olap")
+		url = URI(@URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
 		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
-		request["Cookie"] = "key=#{$iikoResponseToken}"
+		request["Cookie"] = "key=#{@iikoResponseToken}"
 		request.body = lines.to_json
 		response = http.request(request)
 		@data = JSON.parse(response.read_body)
@@ -111,12 +111,12 @@ require 'json'
 	    end
 
 
-	    url = URI($URL+"resto/api/v2/reports/olap")
+	    url = URI(@URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
 			http.use_ssl = @httpbool
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
-			request["Cookie"] = "key=#{$iikoResponseToken}"
+			request["Cookie"] = "key=#{@iikoResponseToken}"
 			request.body = lines.to_json
 			response = http.request(request)
 			@data = JSON.parse(response.read_body)
@@ -129,13 +129,13 @@ require 'json'
 				lines = JSON.load(jsons)
 
 			end
-			url = URI($URL+"resto/api/v2/reports/olap")
+			url = URI(@URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
 			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Post.new(url)
 
 			request["Content-Type"] = "application/json"
-			request["Cookie"] = "key=#{$iikoResponseToken}"
+			request["Cookie"] = "key=#{@iikoResponseToken}"
 			request.body = lines.to_json
 
 			response = http.request(request)
@@ -157,12 +157,12 @@ require 'json'
 		end
 		lines['filters']['OpenDate.Typed']['from'] = Date.today.strftime("%Y-%m-%d")#ВРЕМЕННО убрать prev
 		lines['filters']['OpenDate.Typed']['to']   = Date.today.strftime("%Y-%m-%d")	 #ВРЕМЕННО
-		url = URI($URL+"resto/api/v2/reports/olap")
+		url = URI(@URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
 		http.use_ssl = @httpbool
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
-		request["Cookie"] = "key=#{$iikoResponseToken}"
+		request["Cookie"] = "key=#{@iikoResponseToken}"
 		request.body = lines.to_json
 		response = http.request(request)
 		@data = JSON.parse(response.read_body)
@@ -181,12 +181,12 @@ require 'json'
 			#puts "keka",Date.today.strftime("%Y-%m-%d")
 			#puts lines
 
-			url = URI($URL+"resto/api/v2/reports/olap")
+			url = URI(@URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
 			http.use_ssl = @HTTPBOOL
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
-			request["Cookie"] = "key=#{$iikoResponseToken}"
+			request["Cookie"] = "key=#{@iikoResponseToken}"
 			request.body = lines.to_json
 			response = http.request(request)
 			@data = JSON.parse(response.read_body)
@@ -199,7 +199,7 @@ require 'json'
 	def CheckToken()
 
 		params = {
-			'key':$iikoResponseToken,
+			'key':@iikoResponseToken,
 			'reportType':'SALES'
 			}
 			url = @url + "v2/reports/olap/columns"
@@ -211,7 +211,7 @@ require 'json'
 			puts res.code
 			if res.code!="200"
 				puts res.code
-				$iikoResponseToken=""
+				@iikoResponseToken=""
 				puts "Получаем токен #{Time.now}"
 				GetToken()
 			end
@@ -230,12 +230,12 @@ require 'json'
 		end
 		#puts "keka",Date.today.strftime("%Y-%m-%d")
 
-		url = URI($URL+"resto/api/v2/reports/olap")
+		url = URI(@URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
 		http.use_ssl = @HTTPBOOL
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
-		request["Cookie"] = "key=#{$iikoResponseToken}"
+		request["Cookie"] = "key=#{@iikoResponseToken}"
 		request.body = lines.to_json
 		response = http.request(request)
 		@data = JSON.parse(response.read_body)

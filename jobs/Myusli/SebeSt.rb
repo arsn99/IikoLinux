@@ -1,7 +1,7 @@
 load 'lib/Sebest_Script.rb'
 sebesMyusli = Sebest.new
 sebesFarm = Sebest.new
-SCHEDULER.in '20' do
+SCHEDULER.in '20s' do
 	sebesMyusli.initialization('Myusli',$iikoM)
 	sebesFarm.initialization('Farm',$iikoF)
 end

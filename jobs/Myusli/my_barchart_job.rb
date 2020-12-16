@@ -1,7 +1,7 @@
 
 barMyusli = Bar.new
 barFarm = Bar.new
-SCHEDULER.in '20' do
+SCHEDULER.in '20s' do
   barMyusli.initialization('Myusli',$iikoM)
   barFarm.initialization('Farm',$iikoF)
 end
