@@ -183,7 +183,7 @@ require 'json'
 
 			url = URI(@URL+"resto/api/v2/reports/olap")
 			http = Net::HTTP.new(url.host, url.port)
-			http.use_ssl = @HTTPBOOL
+			http.use_ssl = @httpbool
 			request = Net::HTTP::Post.new(url)
 			request["Content-Type"] = "application/json"
 			request["Cookie"] = "key=#{@iikoResponseToken}"
@@ -232,7 +232,7 @@ require 'json'
 
 		url = URI(@URL+"resto/api/v2/reports/olap")
 		http = Net::HTTP.new(url.host, url.port)
-		http.use_ssl = @HTTPBOOL
+		http.use_ssl = @httpbool
 		request = Net::HTTP::Post.new(url)
 		request["Content-Type"] = "application/json"
 		request["Cookie"] = "key=#{@iikoResponseToken}"
