@@ -3,6 +3,7 @@ class Pie
 	def initialization(name,data)
 		@name =name
 		@dataIiko = data
+		puts "Pie initialization for "+@name
 	end
 
 	def PieF()

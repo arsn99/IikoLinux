@@ -6,6 +6,7 @@ class TopGrup
 	def initialization(name,data)
 		@name =name
 		@dataIiko = data
+		puts "Top initialization for "+@name
 	end
 
 	def TopGrupF()

@@ -3,6 +3,7 @@ class Sebest
 	def initialization(name,data)
 		@name =name
 		@dataIiko = data
+		puts "Sebest initialization for "+@name
 	end
 
 

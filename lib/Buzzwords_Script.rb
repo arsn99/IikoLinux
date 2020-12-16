@@ -6,6 +6,7 @@ class Buzz
 	def initialization(name,data)
 		@name =name
 		@dataIiko = data
+		puts "Buzz initialization for "+@name
 	end
 
 	def BuzzF()

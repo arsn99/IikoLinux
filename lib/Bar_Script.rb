@@ -6,6 +6,7 @@ class Bar
 	def initialization(name,data)
 		@name =name
 		@dataIiko = data
+    puts "Bar initialization for "+@name
 	end
 
 	def BarF()
