@@ -18,8 +18,8 @@
  end
 
  SCHEDULER.every '300s', :first_in => '100s' do |job|
-	$iikoM.CheckToken()
-	$iikoF.CheckToken()
-	#$iikoM.Finalize()
-	#$iikoF.Finalize()
+	#$iikoM.CheckToken()
+	#$iikoF.CheckToken()
+	$iikoM.Finalize()
+	$iikoF.Finalize()
 end
